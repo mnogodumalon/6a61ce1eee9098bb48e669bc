@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "forms": [
+    {
+      "entity": "restaurant_speisekarte",
+      "app_id": "6a61ce1f5bb29bc2695c038c",
+      "path": "/rest/apps/6a61ce1f5bb29bc2695c038c/records",
+      "allowed_fields": [
+        "name",
+        "kueche",
+        "telefon",
+        "bestelllink",
+        "speisekarte",
+        "hinweise"
+      ],
+      "pow": true,
+      "pow_difficulty": 50000,
+      "title": "Restaurant & Speisekarte — Formular"
+    },
+    {
+      "entity": "bestellrunde",
+      "app_id": "6a61ce1f59f6aeaf856ebe80",
+      "path": "/rest/apps/6a61ce1f59f6aeaf856ebe80/records",
+      "allowed_fields": [
+        "bezeichnung",
+        "bestelldatum",
+        "bestellschluss",
+        "koordinator_vorname",
+        "koordinator_nachname",
+        "anmerkungen"
+      ],
+      "pow": true,
+      "pow_difficulty": 50000,
+      "title": "Bestellrunde — Formular"
+    },
+    {
+      "entity": "meine_bestellung",
+      "app_id": "6a61ce1f590b5ccc3e7d6d2f",
+      "path": "/rest/apps/6a61ce1f590b5ccc3e7d6d2f/records",
+      "allowed_fields": [
+        "vorname",
+        "nachname",
+        "gerichte",
+        "sonderwuensche",
+        "betrag",
+        "bezahlt"
+      ],
+      "pow": true,
+      "pow_difficulty": 50000,
+      "title": "Meine Bestellung — Formular"
+    }
+  ]
+}
