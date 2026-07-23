@@ -12,20 +12,6 @@ function resolveDisplay(url: unknown, map: Map<string, any>, ...fields: string[]
   return fields.map(f => String(r.fields[f] ?? '')).join(' ').trim();
 }
 
-interface BestellrundeMaps {
-  restaurantSpeisekarteMap: Map<string, RestaurantSpeisekarte>;
-}
-
-export function enrichBestellrunde(
-  bestellrunde: Bestellrunde[],
-  maps: BestellrundeMaps
-): EnrichedBestellrunde[] {
-  return bestellrunde.map(r => ({
-    ...r,
-    restaurantName: resolveDisplay(r.fields.restaurant, maps.restaurantSpeisekarteMap, 'name'),
-  }));
-}
-
 interface MeineBestellungMaps {
   bestellrundeMap: Map<string, Bestellrunde>;
 }
@@ -37,5 +23,19 @@ export function enrichMeineBestellung(
   return meineBestellung.map(r => ({
     ...r,
     bestellrundeName: resolveDisplay(r.fields.bestellrunde, maps.bestellrundeMap, 'bezeichnung'),
+  }));
+}
+
+interface BestellrundeMaps {
+  restaurantSpeisekarteMap: Map<string, RestaurantSpeisekarte>;
+}
+
+export function enrichBestellrunde(
+  bestellrunde: Bestellrunde[],
+  maps: BestellrundeMaps
+): EnrichedBestellrunde[] {
+  return bestellrunde.map(r => ({
+    ...r,
+    restaurantName: resolveDisplay(r.fields.restaurant, maps.restaurantSpeisekarteMap, 'name'),
   }));
 }

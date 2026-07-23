@@ -1,7 +1,7 @@
 // AUTOMATICALLY GENERATED SERVICE
 import { APP_IDS, LOOKUP_OPTIONS, FIELD_TYPES } from '@/types/app';
 import { ensureUploadableImage } from '@/lib/ai';
-import type { RestaurantSpeisekarte, Bestellrunde, MeineBestellung, CreateRestaurantSpeisekarte, CreateBestellrunde, CreateMeineBestellung } from '@/types/app';
+import type { RestaurantSpeisekarte, MeineBestellung, Bestellrunde, CreateRestaurantSpeisekarte, CreateMeineBestellung, CreateBestellrunde } from '@/types/app';
 
 // Base Configuration
 const API_BASE_URL = 'https://my.living-apps.de/rest';
@@ -95,10 +95,12 @@ async function callApi(method: string, endpoint: string, data?: any, options?: C
     throw netErr;
   }
   if (!response.ok) {
-    if (response.status === 401 || response.status === 403) window.dispatchEvent(new Event('auth-error'));
+    // 401/403 go to the login screen only — never to the errorbus (repair can't fix auth).
+    const isAuthError = response.status === 401 || response.status === 403;
+    if (isAuthError) window.dispatchEvent(new Event('auth-error'));
     const { message, raw } = await parseErrorBody(response);
     const err = new LivingAppsApiError(message, response.status, raw);
-    if (!silent) {
+    if (!silent && !isAuthError) {
       window.dispatchEvent(new CustomEvent('errorbus:emit', { detail: {
         source: 'api',
         status: err.status,
@@ -313,50 +315,27 @@ export async function getAppGroups(): Promise<AppGroupInfo[]> {
 }
 
 export class LivingAppsService {
-  // --- RESTAURANT_&_SPEISEKARTE ---
+  // --- RESTAURANT_SPEISEKARTE ---
   static async getRestaurantSpeisekarte(): Promise<RestaurantSpeisekarte[]> {
     const data = await callApi('GET', `/apps/${APP_IDS.RESTAURANT_SPEISEKARTE}/records`);
     const records = Object.entries(data).map(([id, rec]: [string, any]) => ({
       record_id: id, ...rec
     })) as RestaurantSpeisekarte[];
-    return enrichLookupFields(records, 'restaurant_&_speisekarte');
+    return enrichLookupFields(records, 'restaurant_speisekarte');
   }
   static async getRestaurantSpeisekarteEntry(id: string): Promise<RestaurantSpeisekarte | undefined> {
     const data = await callApi('GET', `/apps/${APP_IDS.RESTAURANT_SPEISEKARTE}/records/${id}`);
     const record = { record_id: data.id, ...data } as RestaurantSpeisekarte;
-    return enrichLookupFields([record], 'restaurant_&_speisekarte')[0];
+    return enrichLookupFields([record], 'restaurant_speisekarte')[0];
   }
   static async createRestaurantSpeisekarteEntry(fields: CreateRestaurantSpeisekarte) {
-    return callApi('POST', `/apps/${APP_IDS.RESTAURANT_SPEISEKARTE}/records`, { fields: cleanFieldsForApi(fields as any, 'restaurant_&_speisekarte') });
+    return callApi('POST', `/apps/${APP_IDS.RESTAURANT_SPEISEKARTE}/records`, { fields: cleanFieldsForApi(fields as any, 'restaurant_speisekarte') });
   }
   static async updateRestaurantSpeisekarteEntry(id: string, fields: Partial<CreateRestaurantSpeisekarte>) {
-    return callApi('PATCH', `/apps/${APP_IDS.RESTAURANT_SPEISEKARTE}/records/${id}`, { fields: cleanFieldsForApi(fields as any, 'restaurant_&_speisekarte') });
+    return callApi('PATCH', `/apps/${APP_IDS.RESTAURANT_SPEISEKARTE}/records/${id}`, { fields: cleanFieldsForApi(fields as any, 'restaurant_speisekarte') });
   }
   static async deleteRestaurantSpeisekarteEntry(id: string) {
     return callApi('DELETE', `/apps/${APP_IDS.RESTAURANT_SPEISEKARTE}/records/${id}`);
-  }
-
-  // --- BESTELLRUNDE ---
-  static async getBestellrunde(): Promise<Bestellrunde[]> {
-    const data = await callApi('GET', `/apps/${APP_IDS.BESTELLRUNDE}/records`);
-    const records = Object.entries(data).map(([id, rec]: [string, any]) => ({
-      record_id: id, ...rec
-    })) as Bestellrunde[];
-    return enrichLookupFields(records, 'bestellrunde');
-  }
-  static async getBestellrundeEntry(id: string): Promise<Bestellrunde | undefined> {
-    const data = await callApi('GET', `/apps/${APP_IDS.BESTELLRUNDE}/records/${id}`);
-    const record = { record_id: data.id, ...data } as Bestellrunde;
-    return enrichLookupFields([record], 'bestellrunde')[0];
-  }
-  static async createBestellrundeEntry(fields: CreateBestellrunde) {
-    return callApi('POST', `/apps/${APP_IDS.BESTELLRUNDE}/records`, { fields: cleanFieldsForApi(fields as any, 'bestellrunde') });
-  }
-  static async updateBestellrundeEntry(id: string, fields: Partial<CreateBestellrunde>) {
-    return callApi('PATCH', `/apps/${APP_IDS.BESTELLRUNDE}/records/${id}`, { fields: cleanFieldsForApi(fields as any, 'bestellrunde') });
-  }
-  static async deleteBestellrundeEntry(id: string) {
-    return callApi('DELETE', `/apps/${APP_IDS.BESTELLRUNDE}/records/${id}`);
   }
 
   // --- MEINE_BESTELLUNG ---
@@ -380,6 +359,29 @@ export class LivingAppsService {
   }
   static async deleteMeineBestellungEntry(id: string) {
     return callApi('DELETE', `/apps/${APP_IDS.MEINE_BESTELLUNG}/records/${id}`);
+  }
+
+  // --- BESTELLRUNDE ---
+  static async getBestellrunde(): Promise<Bestellrunde[]> {
+    const data = await callApi('GET', `/apps/${APP_IDS.BESTELLRUNDE}/records`);
+    const records = Object.entries(data).map(([id, rec]: [string, any]) => ({
+      record_id: id, ...rec
+    })) as Bestellrunde[];
+    return enrichLookupFields(records, 'bestellrunde');
+  }
+  static async getBestellrundeEntry(id: string): Promise<Bestellrunde | undefined> {
+    const data = await callApi('GET', `/apps/${APP_IDS.BESTELLRUNDE}/records/${id}`);
+    const record = { record_id: data.id, ...data } as Bestellrunde;
+    return enrichLookupFields([record], 'bestellrunde')[0];
+  }
+  static async createBestellrundeEntry(fields: CreateBestellrunde) {
+    return callApi('POST', `/apps/${APP_IDS.BESTELLRUNDE}/records`, { fields: cleanFieldsForApi(fields as any, 'bestellrunde') });
+  }
+  static async updateBestellrundeEntry(id: string, fields: Partial<CreateBestellrunde>) {
+    return callApi('PATCH', `/apps/${APP_IDS.BESTELLRUNDE}/records/${id}`, { fields: cleanFieldsForApi(fields as any, 'bestellrunde') });
+  }
+  static async deleteBestellrundeEntry(id: string) {
+    return callApi('DELETE', `/apps/${APP_IDS.BESTELLRUNDE}/records/${id}`);
   }
 
 }

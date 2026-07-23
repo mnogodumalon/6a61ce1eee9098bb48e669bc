@@ -35,21 +35,6 @@ export interface RestaurantSpeisekarte {
   };
 }
 
-export interface Bestellrunde {
-  record_id: string;
-  createdat: string;
-  updatedat: string | null;
-  fields: {
-    bezeichnung?: string;
-    bestelldatum?: string; // Format: YYYY-MM-DD oder ISO String
-    bestellschluss?: string;
-    restaurant?: string; // applookup -> URL zu 'RestaurantSpeisekarte' Record
-    koordinator_vorname?: string;
-    koordinator_nachname?: string;
-    anmerkungen?: string;
-  };
-}
-
 export interface MeineBestellung {
   record_id: string;
   createdat: string;
@@ -65,10 +50,25 @@ export interface MeineBestellung {
   };
 }
 
+export interface Bestellrunde {
+  record_id: string;
+  createdat: string;
+  updatedat: string | null;
+  fields: {
+    bezeichnung?: string;
+    bestelldatum?: string; // Format: YYYY-MM-DD oder ISO String
+    bestellschluss?: string;
+    restaurant?: string; // applookup -> URL zu 'RestaurantSpeisekarte' Record
+    koordinator_vorname?: string;
+    koordinator_nachname?: string;
+    anmerkungen?: string;
+  };
+}
+
 export const APP_IDS = {
   RESTAURANT_SPEISEKARTE: '6a61ce1f5bb29bc2695c038c',
-  BESTELLRUNDE: '6a61ce1f59f6aeaf856ebe80',
   MEINE_BESTELLUNG: '6a61ce1f590b5ccc3e7d6d2f',
+  BESTELLRUNDE: '6a61ce1f59f6aeaf856ebe80',
 } as const;
 
 
@@ -87,15 +87,6 @@ export const FIELD_TYPES: Record<string, Record<string, string>> = {
     'speisekarte': 'string/textarea',
     'hinweise': 'string/textarea',
   },
-  'bestellrunde': {
-    'bezeichnung': 'string/text',
-    'bestelldatum': 'date/datetimeminute',
-    'bestellschluss': 'string/text',
-    'restaurant': 'applookup/select',
-    'koordinator_vorname': 'string/text',
-    'koordinator_nachname': 'string/text',
-    'anmerkungen': 'string/textarea',
-  },
   'meine_bestellung': {
     'bestellrunde': 'applookup/select',
     'vorname': 'string/text',
@@ -104,6 +95,15 @@ export const FIELD_TYPES: Record<string, Record<string, string>> = {
     'sonderwuensche': 'string/textarea',
     'betrag': 'number',
     'bezahlt': 'bool',
+  },
+  'bestellrunde': {
+    'bezeichnung': 'string/text',
+    'bestelldatum': 'date/datetimeminute',
+    'bestellschluss': 'string/text',
+    'restaurant': 'applookup/select',
+    'koordinator_vorname': 'string/text',
+    'koordinator_nachname': 'string/text',
+    'anmerkungen': 'string/textarea',
   },
 };
 
@@ -118,5 +118,5 @@ type StripLookup<T> = {
 
 // Helper Types for creating new records (lookup fields as plain strings for API)
 export type CreateRestaurantSpeisekarte = StripLookup<RestaurantSpeisekarte['fields']>;
-export type CreateBestellrunde = StripLookup<Bestellrunde['fields']>;
 export type CreateMeineBestellung = StripLookup<MeineBestellung['fields']>;
+export type CreateBestellrunde = StripLookup<Bestellrunde['fields']>;

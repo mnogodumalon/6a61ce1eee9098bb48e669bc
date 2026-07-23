@@ -18,22 +18,6 @@
       "title": "Restaurant & Speisekarte — Formular"
     },
     {
-      "entity": "bestellrunde",
-      "app_id": "6a61ce1f59f6aeaf856ebe80",
-      "path": "/rest/apps/6a61ce1f59f6aeaf856ebe80/records",
-      "allowed_fields": [
-        "bezeichnung",
-        "bestelldatum",
-        "bestellschluss",
-        "koordinator_vorname",
-        "koordinator_nachname",
-        "anmerkungen"
-      ],
-      "pow": true,
-      "pow_difficulty": 50000,
-      "title": "Bestellrunde — Formular"
-    },
-    {
       "entity": "meine_bestellung",
       "app_id": "6a61ce1f590b5ccc3e7d6d2f",
       "path": "/rest/apps/6a61ce1f590b5ccc3e7d6d2f/records",
@@ -48,6 +32,22 @@
       "pow": true,
       "pow_difficulty": 50000,
       "title": "Meine Bestellung — Formular"
+    },
+    {
+      "entity": "bestellrunde",
+      "app_id": "6a61ce1f59f6aeaf856ebe80",
+      "path": "/rest/apps/6a61ce1f59f6aeaf856ebe80/records",
+      "allowed_fields": [
+        "bezeichnung",
+        "bestelldatum",
+        "bestellschluss",
+        "koordinator_vorname",
+        "koordinator_nachname",
+        "anmerkungen"
+      ],
+      "pow": true,
+      "pow_difficulty": 50000,
+      "title": "Bestellrunde — Formular"
     }
   ]
 }

@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import type { RestaurantSpeisekarte, Bestellrunde, MeineBestellung } from '@/types/app';
+import type { RestaurantSpeisekarte, MeineBestellung, Bestellrunde } from '@/types/app';
 import { LivingAppsService } from '@/services/livingAppsService';
 
 /** Dashboard data + the OPTIMISTIC-WRITE API.
@@ -14,22 +14,22 @@ import { LivingAppsService } from '@/services/livingAppsService';
  */
 export function useDashboardData() {
   const [restaurantSpeisekarte, setRestaurantSpeisekarte] = useState<RestaurantSpeisekarte[]>([]);
-  const [bestellrunde, setBestellrunde] = useState<Bestellrunde[]>([]);
   const [meineBestellung, setMeineBestellung] = useState<MeineBestellung[]>([]);
+  const [bestellrunde, setBestellrunde] = useState<Bestellrunde[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
   const fetchAll = useCallback(async () => {
     setError(null);
     try {
-      const [restaurantSpeisekarteData, bestellrundeData, meineBestellungData] = await Promise.all([
+      const [restaurantSpeisekarteData, meineBestellungData, bestellrundeData] = await Promise.all([
         LivingAppsService.getRestaurantSpeisekarte(),
-        LivingAppsService.getBestellrunde(),
         LivingAppsService.getMeineBestellung(),
+        LivingAppsService.getBestellrunde(),
       ]);
       setRestaurantSpeisekarte(restaurantSpeisekarteData);
-      setBestellrunde(bestellrundeData);
       setMeineBestellung(meineBestellungData);
+      setBestellrunde(bestellrundeData);
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Fehler beim Laden der Daten'));
     } finally {
@@ -43,14 +43,14 @@ export function useDashboardData() {
   useEffect(() => {
     async function silentRefresh() {
       try {
-        const [restaurantSpeisekarteData, bestellrundeData, meineBestellungData] = await Promise.all([
+        const [restaurantSpeisekarteData, meineBestellungData, bestellrundeData] = await Promise.all([
           LivingAppsService.getRestaurantSpeisekarte(),
-          LivingAppsService.getBestellrunde(),
           LivingAppsService.getMeineBestellung(),
+          LivingAppsService.getBestellrunde(),
         ]);
         setRestaurantSpeisekarte(restaurantSpeisekarteData);
-        setBestellrunde(bestellrundeData);
         setMeineBestellung(meineBestellungData);
+        setBestellrunde(bestellrundeData);
       } catch {
         // silently ignore — stale data is better than no data
       }
@@ -72,5 +72,5 @@ export function useDashboardData() {
     return m;
   }, [bestellrunde]);
 
-  return { restaurantSpeisekarte, setRestaurantSpeisekarte, bestellrunde, setBestellrunde, meineBestellung, setMeineBestellung, loading, error, fetchAll, restaurantSpeisekarteMap, bestellrundeMap };
+  return { restaurantSpeisekarte, setRestaurantSpeisekarte, meineBestellung, setMeineBestellung, bestellrunde, setBestellrunde, loading, error, fetchAll, restaurantSpeisekarteMap, bestellrundeMap };
 }

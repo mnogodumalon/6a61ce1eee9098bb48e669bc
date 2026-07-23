@@ -10,7 +10,7 @@ import { useActions } from '@/context/ActionsContext';
 import { Button } from '@/components/ui/button';
 import { VersionCheck } from '@/components/VersionCheck';
 
-const APP_TITLE = 'Gemeinsam Essen Bestellen';
+const APP_TITLE = 'Gemeinsam Essen Bestellen Kopie';
 const APP_ID = '6a61ce1f5bb29bc2695c038c';
 const APPGROUP_ID = '6a61ce1eee9098bb48e669bc';
 
